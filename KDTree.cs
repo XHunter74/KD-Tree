@@ -12,7 +12,7 @@ public class KDTree
 
     public Point FindNeighbor(Point point)
     {
-        var neighbor = FindPossibleNeighbor(point);
+        var neighbor = FindPossibleNeighborInt(RootNode, point.X, point.Y);
         var distance = GetDistance(point, neighbor);
         var neighbors = FindNeighborsInt(RootNode, point, distance);
 
@@ -63,9 +63,6 @@ public class KDTree
     private static double GetDistance(Point a, Point b) =>
         Math.Sqrt(Math.Pow(a.X - b.X, 2) + Math.Pow(a.Y - b.Y, 2));
 
-    private Point FindPossibleNeighbor(Point point) =>
-        FindPossibleNeighborInt(RootNode, point.X, point.Y);
-
     private static Point FindPossibleNeighborInt(KDTreeNode tree, double coord1, double coord2)
     {
         if (tree.Point != null)
@@ -96,9 +93,9 @@ public class KDTree
             sorted = points.OrderBy(p => p.Y).ToList();
             median = GetMedian(sorted.Select(p => p.Y).ToList());
         }
-
-        var left = sorted.Where(p => (depth % 2 == 0 ? p.X : p.Y) < median).ToList();
-        var right = sorted.Where(p => (depth % 2 == 0 ? p.X : p.Y) >= median).ToList();
+        var isEven = depth % 2 == 0;
+        var left = sorted.Where(p => (isEven ? p.X : p.Y) < median).ToList();
+        var right = sorted.Where(p => (isEven ? p.X : p.Y) >= median).ToList();
 
         node.Median = median;
         node.Left = BuildKDTree(depth + 1, left);

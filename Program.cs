@@ -18,7 +18,8 @@ class Program
             points = Utils.ReadPointsFromFile(filePath);
         }
 
-        Point center = new Point(157f, 19f);
+        Point targetPoint = new Point(157f, 19f);
+        Console.WriteLine($"Target Point = {targetPoint.X} : {targetPoint.Y}");
 
         var sw = Stopwatch.StartNew();
         var kdTree = new KDTree(points);
@@ -26,15 +27,15 @@ class Program
         Console.WriteLine($"Build tree time: {sw.ElapsedMilliseconds} ms");
 
         sw.Restart();
-        var neighborTree = kdTree.FindNeighbor(center);
+        var neighborTree = kdTree.FindNeighbor(targetPoint);
         Console.WriteLine($"Point from Tree = {neighborTree.X} : {neighborTree.Y}");
-        Console.WriteLine($"Distance from target point = {Utils.GetDistance(center, neighborTree)}");
+        Console.WriteLine($"Distance from target point = {Utils.GetDistance(targetPoint, neighborTree)}");
         Console.WriteLine($"Time from Tree: {sw.ElapsedMilliseconds} ms");
 
         sw.Restart();
-        var neighborArray = GetNearestFromArray(points, center);
+        var neighborArray = GetNearestFromArray(points, targetPoint);
         Console.WriteLine($"Point from Array = {neighborArray.X} : {neighborArray.Y}");
-        Console.WriteLine($"Distance from target point = {Utils.GetDistance(center, neighborArray)}");
+        Console.WriteLine($"Distance from target point = {Utils.GetDistance(targetPoint, neighborArray)}");
         Console.WriteLine($"Time from Array: {sw.ElapsedMilliseconds} ms");
     }
 
