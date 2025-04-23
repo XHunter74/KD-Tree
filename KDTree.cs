@@ -2,19 +2,19 @@ namespace KDTree;
 
 public class KDTree
 {
-    public KDTreeNode RootNode { get; private set; }
-    public int TreeDepth { get; private set; } = 0;
+    public KDTreeNode Root { get; private set; }
+    public int Depth { get; private set; } = 0;
 
     public KDTree(List<Point> points)
     {
-        RootNode = BuildKDTree(0, points);
+        Root = BuildKDTree(0, points);
     }
 
     public Point FindNeighbor(Point point)
     {
-        var neighbor = FindPossibleNeighborInt(RootNode, point.X, point.Y);
+        var neighbor = FindPossibleNeighbor(Root, point.X, point.Y);
         var distance = GetDistance(point, neighbor);
-        var neighbors = FindNeighborsInt(RootNode, point, distance);
+        var neighbors = FindNeighbors(Root, point, distance);
 
         foreach (var possibleNeighbor in neighbors)
         {
@@ -29,7 +29,7 @@ public class KDTree
         return neighbor;
     }
 
-    private static List<Point> FindNeighborsInt(KDTreeNode tree, Point point, double distance)
+    private static List<Point> FindNeighbors(KDTreeNode tree, Point point, double distance)
     {
         var result = new List<Point>();
         if (tree.Point != null)
@@ -52,9 +52,9 @@ public class KDTree
             }
 
             if (limitPositive >= tree.Median)
-                result.AddRange(FindNeighborsInt(tree.Right, point, distance));
+                result.AddRange(FindNeighbors(tree.Right, point, distance));
             if (limitNegative < tree.Median)
-                result.AddRange(FindNeighborsInt(tree.Left, point, distance));
+                result.AddRange(FindNeighbors(tree.Left, point, distance));
         }
 
         return result;
@@ -63,20 +63,23 @@ public class KDTree
     private static double GetDistance(Point a, Point b) =>
         Math.Sqrt(Math.Pow(a.X - b.X, 2) + Math.Pow(a.Y - b.Y, 2));
 
-    private static Point FindPossibleNeighborInt(KDTreeNode tree, double coord1, double coord2)
+    private static Point FindPossibleNeighbor(KDTreeNode tree, double coord1, double coord2)
     {
         if (tree.Point != null)
             return tree.Point;
 
         var subTree = (coord1 < tree.Median) ? tree.Left : tree.Right;
-        return FindPossibleNeighborInt(subTree, coord2, coord1);
+        return FindPossibleNeighbor(subTree, coord2, coord1);
     }
 
     private KDTreeNode BuildKDTree(int depth, List<Point> points)
     {
+        if (points == null || points.Count == 0)
+            throw new ArgumentException("Points lis is empty");
+
         if (points.Count == 1)
         {
-            TreeDepth = Math.Max(TreeDepth, depth);
+            Depth = Math.Max(Depth, depth);
             return new KDTreeNode(points[0]);
         }
 
@@ -104,12 +107,14 @@ public class KDTree
         return node;
     }
 
+    /// <summary>
+    /// Get the median value from a list of values.
+    /// </summary>
+    /// <param name="values">Sorted values</param>
+    /// <returns></returns>
     private static double GetMedian(List<double> values)
     {
-        values.Sort();
         int n = values.Count;
-        return n % 2 == 0
-            ? (values[n / 2 - 1] + values[n / 2]) / 2.0
-            : values[n / 2];
+        return values[n / 2];
     }
 }

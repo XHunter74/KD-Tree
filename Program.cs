@@ -23,7 +23,7 @@ class Program
 
         var sw = Stopwatch.StartNew();
         var kdTree = new KDTree(points);
-        Console.WriteLine($"Tree Depth = {kdTree.TreeDepth}");
+        Console.WriteLine($"Tree Depth = {kdTree.Depth}");
         Console.WriteLine($"Build tree time: {sw.ElapsedMilliseconds} ms");
 
         sw.Restart();
