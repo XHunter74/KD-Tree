@@ -65,7 +65,7 @@ public class KDTree
 
     private static Point FindPossibleNeighbor(KDTreeNode tree, double coord1, double coord2)
     {
-        if (tree.Point != null)
+        if (tree.IsLeaf)
             return tree.Point;
 
         var subTree = (coord1 < tree.Median) ? tree.Left : tree.Right;
