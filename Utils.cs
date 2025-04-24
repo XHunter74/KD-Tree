@@ -31,4 +31,20 @@ public static class Utils
         foreach (var p in points)
             writer.WriteLine($"{p.X}:{p.Y}");
     }
+
+    public static Point GetNearestFromArray(List<Point> points, Point center)
+    {
+        Point nearest = null;
+        double minDist = double.MaxValue;
+        foreach (var point in points)
+        {
+            var dist = Utils.GetDistance(center, point);
+            if (dist < minDist)
+            {
+                minDist = dist;
+                nearest = point;
+            }
+        }
+        return nearest;
+    }
 }

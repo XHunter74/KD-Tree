@@ -33,25 +33,9 @@ class Program
         Console.WriteLine($"Time from Tree: {sw.ElapsedMilliseconds} ms");
 
         sw.Restart();
-        var neighborArray = GetNearestFromArray(points, targetPoint);
+        var neighborArray = Utils.GetNearestFromArray(points, targetPoint);
         Console.WriteLine($"Point from Array = {neighborArray.X} : {neighborArray.Y}");
         Console.WriteLine($"Distance from target point = {Utils.GetDistance(targetPoint, neighborArray)}");
         Console.WriteLine($"Time from Array: {sw.ElapsedMilliseconds} ms");
-    }
-
-    static Point GetNearestFromArray(List<Point> points, Point center)
-    {
-        Point nearest = null;
-        double minDist = double.MaxValue;
-        foreach (var point in points)
-        {
-            var dist = Utils.GetDistance(center, point);
-            if (dist < minDist)
-            {
-                minDist = dist;
-                nearest = point;
-            }
-        }
-        return nearest;
     }
 }
